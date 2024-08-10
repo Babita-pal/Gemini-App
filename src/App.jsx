@@ -1,20 +1,17 @@
 import React, { useState } from 'react';
 import "./App.css";
 
-// Import the Google Generative AI package
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export default function App() {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
 
-    // Replace with your actual API key
     const API_KEY = "AIzaSyA3184YLvmoBY_I8E_d92tVaUM7hVk051E";
     const model = new GoogleGenerativeAI(API_KEY).getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const generateContent = async (prompt) => {
         try {
-            // Generate content
             const result = await model.generateContent(prompt);
             const response = await result.response;
             const text = await response.text();
@@ -26,12 +23,10 @@ export default function App() {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Prevent default form submission behavior
-
+        e.preventDefault(); 
         const formEle = document.querySelector("form");
         const formData = new FormData(formEle);
 
-        // Convert FormData to an object
         const formDataObj = {};
         formData.forEach((value, key) => {
             formDataObj[key] = value;
@@ -51,10 +46,8 @@ export default function App() {
 
             const prompts = questions;
 
-            // Fetch responses from the Gemini API
             const responses = await Promise.all(prompts.map(prompt => generateContent(prompt)));
 
-            // Combine form data, questions, and responses
             const combinedData = {
                 name: formDataObj.Name,
                 email: formDataObj.Email,
@@ -64,7 +57,6 @@ export default function App() {
                 }))
             };
 
-            // Log combined data to the console
             console.log('Name:', combinedData.name);
             console.log('Email:', combinedData.email);
             combinedData.answers.forEach((item, index) => {
@@ -72,8 +64,7 @@ export default function App() {
                 console.log(`Answer ${index + 1}:`, item.response);
             });
 
-            // Prepare data to send to Google Sheets
-            const sheetData = new URLSearchParams();
+           const sheetData = new URLSearchParams();
             sheetData.append('Name', formDataObj.Name);
             sheetData.append('Email', formDataObj.Email);
             combinedData.answers.forEach((item, index) => {
@@ -81,7 +72,6 @@ export default function App() {
                 sheetData.append(`Answer${index + 1}`, item.response);
             });
 
-            // Send form data to Google Sheets
             await fetch(
                 "https://script.google.com/macros/s/AKfycbxWbIMD3BNowtzmWiW0ElfUUg3Ww1uEcRo-PiYn5fonIsVwkIRXBW0MLG6iKbyGNGw/exec",
                 {
@@ -102,7 +92,6 @@ export default function App() {
                 console.error('Error:', error);
             });
             
-            // Set success message
             setMessage('Your answers will be sent to your respective email.');
 
         } catch (error) {
@@ -110,7 +99,7 @@ export default function App() {
             setMessage('Error fetching responses.');
         } finally {
             setLoading(false);
-            formEle.reset(); // Reset the form fields
+            formEle.reset(); 
         }
     };
 

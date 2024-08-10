@@ -43,7 +43,6 @@ body {
   color: #ffffff;
 }
 
-/* Animation for header */
 @keyframes slideIn {
   from {
     transform: translateY(-20px);
@@ -55,7 +54,6 @@ body {
   }
 }
 
-/* Headings */
 .app-title {
   text-align: center;
   color: #C54B8C;
@@ -72,7 +70,6 @@ body {
   font-size: 1.2rem;
 }
 
-/* Form Styles */
 .form {
   display: flex;
   flex-direction: column;
